@@ -9,7 +9,7 @@ $dualImgPath 		= WEB_PATH . 'HJoceanSmall_dual.png';
 $imgResizedPath 	= WEB_PATH . 'HJoceanSmall_resized.png';
 $dualImgResizedPath = WEB_PATH . 'HJoceanSmall_dual_resized.png';
 
-$picture = new \Picture($imgPath);
+$picture = new Picture($imgPath);
 $seamCarver = new SeamCarver($picture);
 
 $seamCarver->outputDualGradientPicture($dualImgPath);

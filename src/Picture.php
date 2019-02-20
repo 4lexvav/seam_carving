@@ -24,15 +24,26 @@ class Picture implements PictureInterface
     private $height = null;
 
     /**
-     * @var resource - image skipped through dual-gradient energy function
+     * @var resource - image
      */
-    private $dualGradientImage;
+    private $originalImage;
+
+    /**
+     * @var int
+     */
+    private $origWidth;
+
+    /**
+     * @var int
+     */
+    private $origHeight;
 
     public function __construct(string $path, array $imageMatrix = null)
     {
         $image = imagecreatefromstring(file_get_contents($path));
 
         $this->image = $image;
+        $this->originalImage = $image;
         $this->imageMatrix = $imageMatrix;
         $this->buildMatrix();
     }
@@ -44,6 +55,7 @@ class Picture implements PictureInterface
     {
         if ($this->width === null) {
             $this->width = imagesx($this->image);
+            $this->origWidth = imagesx($this->image);
         }
 
         return $this->width;
@@ -56,6 +68,7 @@ class Picture implements PictureInterface
     {
         if ($this->height === null) {
             $this->height = imagesy($this->image);
+            $this->origHeight = imagesy($this->image);
         }
 
         return $this->height;
@@ -176,6 +189,11 @@ class Picture implements PictureInterface
     public function output(string $path): void
     {
         imagejpeg($this->createImage(), $path);
+    }
+
+    public function drawSeam(array $seam): void
+    {
+        $px = imagecreatetruecolor(1, 1);
     }
 
     /**

@@ -66,4 +66,11 @@ interface PictureInterface
      * @param string $path
      */
     public function output(string $path): void;
+
+    /**
+     * Draw line on the image.
+     *
+     * @param array $seam
+     */
+    public function drawSeam(array $seam): void;
 }
