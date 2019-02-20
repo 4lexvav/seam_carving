@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 interface PictureInterface
 {
-    public function __construct(string $path, SplFixedArray $imageMatrix = null);
+    public function __construct(string $path, array $imageMatrix = null);
 
     /**
      * Get image width.
@@ -32,9 +32,9 @@ interface PictureInterface
     /**
      * Return image matrix with RGB colors for each px.
      *
-     * @return SplFixedArray
+     * @return array
      */
-    public function getImageMatrix(): SplFixedArray;
+    public function getImageMatrix(): array;
 
     /**
      * Get RGB color of a px.
@@ -42,9 +42,9 @@ interface PictureInterface
      * @param int $y
      * @param int $x
      *
-     * @return SplFixedArray
+     * @return array
      */
-    public function getPxColor(int $y, int $x): SplFixedArray;
+    public function getPxColor(int $y, int $x): array;
 
     /**
      * Remove horizontal seam from picture.

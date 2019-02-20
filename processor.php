@@ -2,31 +2,38 @@
 
 require_once './vendor/autoload.php';
 
-/*$picture = new \Picture('./web/image.jpeg');
-$picture->outputDualGradientPicture('./web/out.jpg');*/
+const WEB_PATH = './web/';
 
-$picture = new \Picture('./web/HJoceanSmall.png');
+$imgPath 			= WEB_PATH . 'HJoceanSmall.png';
+$dualImgPath 		= WEB_PATH . 'HJoceanSmall_dual.png';
+$imgResizedPath 	= WEB_PATH . 'HJoceanSmall_resized.png';
+$dualImgResizedPath = WEB_PATH . 'HJoceanSmall_dual_resized.png';
+
+$picture = new \Picture($imgPath);
 $seamCarver = new SeamCarver($picture);
 
-$seamCarver->outputDualGradientPicture('./web/HJoceanSmallOut.png');
+$seamCarver->outputDualGradientPicture($dualImgPath);
 
-# read from input
-$x = '3';
-$y = '3';
+$x = '20';
+$y = '10';
 
 # collect and remove seams
 $hSeams = [];
 $vSeams = [];
-
 for ($i = 0; $i < $x; $i++) {
 	$hSeams[] = $seamCarver->findVerticalSeam();
 	$seamCarver->removeVerticalSeam($hSeams[$i]);
 }
 
-/*for ($i = 0; $i < $y; $i++) {
+for ($i = 0; $i < $y; $i++) {
 	$vSeams[] = $seamCarver->findHorizontalSeam();
 	$seamCarver->removeHorizontalSeam($vSeams[$i]);
-}*/
+}
+
+// output images with removed seams
+$picture->output($imgResizedPath);
+$seamCarver->outputDualGradientPicture($dualImgResizedPath);
+
 
 /**
  * Seam Carving Algorithm
@@ -35,17 +42,14 @@ for ($i = 0; $i < $x; $i++) {
  *  1.1. Parse image and create image matrix
  *
  * 2. Create SeamCarving instance based on Picture instance
- *  2.1. Create energy matrix based on Picture
- *  2.2. Backup original energy matrix to immutable property
+ *  2.1. Create energy matrix from Picture
  *
- * 3. Output image after processing by dual-gradient energy function
+ * 3. Output image after processing it by dual-gradient energy function
  *
- * 4. Find seam
- *  4.1. Collect all seams we need to remove
+ * 4. Find and remove seams
+ *  4.1. Find seam we need to remove
+ *  4.2. Remove seam pixels from energy matrix
+ *  4.3. Remove seam pixels from Picture image matrix
  *
- * 5. Remove seam
- *  5.1. Remove seam pixels from energy matrix
- *  5.2. Remove seam pixels from Picture image matrix
- *
- * 6. Create new image based on the Picture image matrix after removed seams pixels
+ * 6. Create and output new image based on the modified Picture image matrix
  */

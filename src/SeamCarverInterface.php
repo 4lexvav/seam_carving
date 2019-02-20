@@ -3,7 +3,7 @@
 
 interface SeamCarverInterface
 {
-    public function __construct(PictureInterface $picture, SplFixedArray $energyMatrix = null);
+    public function __construct(PictureInterface $picture, array $energyMatrix = null);
 
     /**
      * Current picture.
