@@ -1,23 +1,6 @@
 # Seam Carving - content-aware image resizing technique
 
-### Seam Carving Algorithm
-
-1. Create Picture instance
-	1. Parse image and create image matrix
- 
-2. Create SeamCarving instance based on Picture instance
-	1. Create energy matrix from Picture
-
-3. Output image after processing it by dual-gradient energy function
-
-4. Find and remove seams
-	1. Find seam we need to remove
-	2. Remove seam pixels from energy matrix
-	3. Remove seam pixels from Picture image matrix
-
-5. Create and output new image based on the modified Picture image matrix
-
-### Example
+### Usage
 
 ```php
 $picture = new Picture('./web/image.png');
