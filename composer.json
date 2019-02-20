@@ -1,0 +1,17 @@
+{
+    "name": "4lexvav/seam-carving",
+    "description": "Content-aware image resizing",
+    "type": "project",
+    "authors": [
+        {
+            "name": "4lexvav",
+            "email": "4lexvav@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    }
+}
