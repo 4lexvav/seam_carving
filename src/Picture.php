@@ -191,9 +191,29 @@ class Picture implements PictureInterface
         imagejpeg($this->createImage(), $path);
     }
 
-    public function drawSeam(array $seam): void
+    /**
+     * @inheritdoc
+     */
+    public function outputWithSeams(array $hSeams, array $vSeams, string $path): void
     {
-        $px = imagecreatetruecolor(1, 1);
+        $color = imagecolorallocate(imagecreatetruecolor(1, 1), 255, 0, 0);
+        $image = $this->originalImage;
+
+        // set vertical seams
+        foreach ($vSeams as $seam) {
+            foreach ($seam as $y => $x) {
+                imagesetpixel($image, $x, $y, $color);
+            }
+        }
+
+        // set horizontal seams
+        foreach ($hSeams as $seam) {
+            foreach ($seam as $x => $y) {
+                imagesetpixel($image, $x, $y, $color);
+            }
+        }
+
+        imagejpeg($image, $path);
     }
 
     /**

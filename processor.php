@@ -4,35 +4,43 @@ require_once './vendor/autoload.php';
 
 const WEB_PATH = './web/';
 
-$imgPath 			= WEB_PATH . 'HJoceanSmall.png';
-$dualImgPath 		= WEB_PATH . 'HJoceanSmall_dual.png';
-$imgResizedPath 	= WEB_PATH . 'HJoceanSmall_resized.png';
-$dualImgResizedPath = WEB_PATH . 'HJoceanSmall_dual_resized.png';
+$imgPath 			  = WEB_PATH . '2.jpeg';
+$dualImgPath 		  = WEB_PATH . '2_dual.jpeg';
+$imgResizedPath 	  = WEB_PATH . '2_resized.jpeg';
+$dualImgResizedPath   = WEB_PATH . '2_dual_resized.jpeg';
+$baseImgWithSeamsFile = WEB_PATH . '2_seams.jpeg';
+
+/*$imgPath 			  = WEB_PATH . '1.png';
+$dualImgPath 		  = WEB_PATH . '1_dual.png';
+$imgResizedPath 	  = WEB_PATH . '1_resized.png';
+$dualImgResizedPath   = WEB_PATH . '1_dual_resized.png';
+$baseImgWithSeamsFile = WEB_PATH . '1_seams.png';*/
 
 $picture = new Picture($imgPath);
 $seamCarver = new SeamCarver($picture);
 
 $seamCarver->outputDualGradientPicture($dualImgPath);
 
-$x = '20';
-$y = '10';
+$x = '1';
+$y = '1';
 
 # collect and remove seams
-$hSeams = [];
 $vSeams = [];
+$hSeams = [];
 for ($i = 0; $i < $x; $i++) {
-	$hSeams[] = $seamCarver->findVerticalSeam();
-	$seamCarver->removeVerticalSeam($hSeams[$i]);
+	$vSeams[] = $seamCarver->findVerticalSeam();
+	$seamCarver->removeVerticalSeam($vSeams[$i]);
 }
 
 for ($i = 0; $i < $y; $i++) {
-	$vSeams[] = $seamCarver->findHorizontalSeam();
-	$seamCarver->removeHorizontalSeam($vSeams[$i]);
+	$hSeams[] = $seamCarver->findHorizontalSeam();
+	$seamCarver->removeHorizontalSeam($hSeams[$i]);
 }
 
 // output images with removed seams
 $picture->output($imgResizedPath);
 $seamCarver->outputDualGradientPicture($dualImgResizedPath);
+$picture->outputWithSeams($hSeams, $vSeams, $baseImgWithSeamsFile);
 
 
 /**

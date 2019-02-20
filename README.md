@@ -3,29 +3,36 @@
 ### Usage
 
 ```php
-$picture = new Picture('./web/image.png');
+$imgPath 			  = WEB_PATH . '2.jpeg';
+$dualImgPath 		  = WEB_PATH . '2_dual.jpeg';
+$imgResizedPath 	  = WEB_PATH . '2_resized.jpeg';
+$dualImgResizedPath   = WEB_PATH . '2_dual_resized.jpeg';
+$baseImgWithSeamsFile = WEB_PATH . '2_seams.jpeg';
+
+$picture = new Picture($imgPath);
 $seamCarver = new SeamCarver($picture);
 
-$seamCarver->outputDualGradientPicture('./web/image_dual.png');
+$seamCarver->outputDualGradientPicture($dualImgPath);
 
 // reduce by 20px in width and 10px in height
 $x = '20';
 $y = '10';
 
 // collect and remove seams
-$hSeams = [];
 $vSeams = [];
+$hSeams = [];
 for ($i = 0; $i < $x; $i++) {
-	$hSeams[] = $seamCarver->findVerticalSeam();
-	$seamCarver->removeVerticalSeam($hSeams[$i]);
+	$vSeams[] = $seamCarver->findVerticalSeam();
+	$seamCarver->removeVerticalSeam($vSeams[$i]);
 }
 
 for ($i = 0; $i < $y; $i++) {
-	$vSeams[] = $seamCarver->findHorizontalSeam();
-	$seamCarver->removeHorizontalSeam($vSeams[$i]);
+	$hSeams[] = $seamCarver->findHorizontalSeam();
+	$seamCarver->removeHorizontalSeam($hSeams[$i]);
 }
 
 // output images with removed seams
-$picture->output('./web/image_resized.png');
-$seamCarver->outputDualGradientPicture('./web/image_dual_resized.png');
+$picture->output($imgResizedPath);
+$seamCarver->outputDualGradientPicture($dualImgResizedPath);
+$picture->outputWithSeams($hSeams, $vSeams, $baseImgWithSeamsFile);
 ```
