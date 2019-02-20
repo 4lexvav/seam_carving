@@ -3,28 +3,27 @@
 ### Seam Carving Algorithm
 
 1. Create Picture instance
-  1.1. Parse image and create image matrix
+	1. Parse image and create image matrix
  
 2. Create SeamCarving instance based on Picture instance
-  2.1. Create energy matrix from Picture
+	1. Create energy matrix from Picture
 
 3. Output image after processing it by dual-gradient energy function
 
 4. Find and remove seams
-  4.1. Find seam we need to remove
-  4.2. Remove seam pixels from energy matrix
-  4.3. Remove seam pixels from Picture image matrix
+	1. Find seam we need to remove
+	2. Remove seam pixels from energy matrix
+	3. Remove seam pixels from Picture image matrix
 
 5. Create and output new image based on the modified Picture image matrix
-
 
 ### Example
 
 ```php
-$picture = new \Picture('./web/image.png');
+$picture = new Picture('./web/image.png');
 $seamCarver = new SeamCarver($picture);
 
-$seamCarver->outputDualGradientPicture(./web/image_dual.png);
+$seamCarver->outputDualGradientPicture('./web/image_dual.png');
 
 // reduce by 20px in width and 10px in height
 $x = '20';
