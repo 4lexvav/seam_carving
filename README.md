@@ -3,9 +3,11 @@
 ### Usage
 
 ```php
-$imgPath 			  = WEB_PATH . '2.jpeg';
-$dualImgPath 		  = WEB_PATH . '2_dual.jpeg';
-$imgResizedPath 	  = WEB_PATH . '2_resized.jpeg';
+const WEB_PATH = './web/';
+
+$imgPath              = WEB_PATH . '2.jpeg';
+$dualImgPath 	      = WEB_PATH . '2_dual.jpeg';
+$imgResizedPath       = WEB_PATH . '2_resized.jpeg';
 $dualImgResizedPath   = WEB_PATH . '2_dual_resized.jpeg';
 $baseImgWithSeamsFile = WEB_PATH . '2_seams.jpeg';
 
