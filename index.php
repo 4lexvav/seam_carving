@@ -109,18 +109,47 @@ if (isset($_FILES['image']['tmp_name'], $_POST['size'])) {
 
                 <div class="row mb-5">
                     <img class="img-fluid mx-auto" alt="Responsive image" src="<?= $baseImgFile ?>">
-                </div>
-                <div class="row mb-5">
                     <img class="img-fluid mx-auto" alt="Responsive image" src="<?= $dualImgFile ?>">
-                </div>
-                <div class="row mb-5">
-                    <img class="img-fluid mx-auto" alt="Responsive image" src="<?= $resizedImgFile ?>">
+                    <!--<canvas id="base_image"></canvas>-->
                 </div>
                 <div class="row mb-5">
                     <img class="img-fluid mx-auto" alt="Responsive image" src="<?= $baseImgWithSeamsFile ?>">
+                    <img class="img-fluid mx-auto" alt="Responsive image" src="<?= $resizedImgFile ?>">
                 </div>
             </div>
         </div>
+
+        <!--<script type="text/javascript">
+        //    var canvas = document.getElementById('base_image');
+        //    var ctx = canvas.getContext('2d');
+        //
+        //    ctx.fillStyle = '#FF0000';
+        //    canvas.style['background-image'] = 'url("<?/*//= $baseImgFile */?>//")';
+        //    canvas.style['background-size'] = '100%';
+        //    canvas.style.width = '50%';
+        //    canvas.style.height = '50%';
+        //
+        //    /*base_image = new Image();
+        //    base_image.src = "<?/*//= $baseImgFile */?>//";
+        //    base_image.onload = function() {
+        //        ctx.drawImage(base_image, 0, 0);
+        //    }*/
+        //
+        //    vSeams = <?/*//= json_encode($vSeams) */?>//;
+        //    hSeams = <?/*//= json_encode($hSeams) */?>//;
+        //
+        //    vSeams.forEach(seam => {
+        //        for (let [y, x] of Object.entries(seam)) {
+        //            ctx.fillRect(x, y, 1, 1);
+        //        }
+        //    });
+        //
+        //    hSeams.forEach(seam => {
+        //        for (let [x, y] of Object.entries(seam)) {
+        //            ctx.fillRect(x, y, 1, 1);
+        //        }
+        //    });
+        //</script>-->
     <?php endif ?>
 
 </main>
@@ -133,8 +162,4 @@ if (isset($_FILES['image']['tmp_name'], $_POST['size'])) {
     </div>
 </footer>
 
-<script type="text/javascript">
-    vSeams = <?= json_encode($vSeams) ?>;
-    hSeams = <?= json_encode($hSeams) ?>;
-</script>
 </html>
