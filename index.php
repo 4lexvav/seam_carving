@@ -24,7 +24,8 @@ if (isset($_FILES['image']['tmp_name'], $_POST['size'])) {
         exit();
     }
 
-    move_uploaded_file($_FILES['image']['tmp_name'], $targetFile);
+    //move_uploaded_file($_FILES['image']['tmp_name'], $targetFile);
+    file_put_contents($targetFile, file_get_contents($_FILES['image']['tmp_name']));
 
     // prepare size
     $size = explode('x', strtolower(htmlspecialchars(strip_tags($_POST['size']))));
