@@ -65,15 +65,17 @@ class SeamCarver implements SeamCarverInterface
         $seam = [];
         $minIdx = 0;
         $minEnergy = 0;
-        $pathMatrix = array_fill(0, $this->height(), array_fill(0, $this->width(), 0));
-        $energyMatrix = $this->getPictureEnergyMatrix();
+        $height = $this->height();
+        $width = $this->width();
+        $pathMatrix = array_fill(0, $height, array_fill(0, $width, 0));
 
-        $line = array_fill(0, $this->height(), 0);
-        for ($i = 0; $i < $this->width(); $i++) {
-            for ($j = 0; $j < $this->height(); $j++) {
+        $energyMatrix = $this->getPictureEnergyMatrix();
+        $line = array_fill(0, $height, 0);
+        for ($i = 0; $i < $width; $i++) {
+            for ($j = 0; $j < $height; $j++) {
                 $p = ($j === 0) ? $j : $j - 1; // x - 1 px
                 $c = $j; // x px
-                $n = ($j + 1 === $this->height()) ? $j : $j + 1; // x + 1 px
+                $n = ($j + 1 === $height) ? $j : $j + 1; // x + 1 px
 
                 $pV = $line[$p];
                 $cV = $line[$c];
@@ -82,6 +84,7 @@ class SeamCarver implements SeamCarverInterface
                 // add minimum energy to the next px
                 $minEnergy = min($pV, $cV, $nV);
                 $minIdx = array_search($minEnergy, [$p => $pV, $c => $cV, $n => $nV], true);
+
                 $energyMatrix[$j][$i] += $minEnergy;
 
                 // store x-coordinate position (min energy idx) from which we came to this px to collect seam carve path
@@ -91,14 +94,14 @@ class SeamCarver implements SeamCarverInterface
         }
 
         // identify current seam location by finding minimum value stored in the latest horizontal line of an image
-        $lastColumnValues = array_column($energyMatrix, $this->width() - 1);
+        $lastColumnValues = array_column($energyMatrix, $width - 1);
         $minEnergy = min($lastColumnValues); // energy value
         $minIdx = array_search($minEnergy, $lastColumnValues, true);
 
-        $seam[$this->width() - 1] = $minIdx;
+        $seam[$width - 1] = $minIdx;
 
         // collect lowest seam by using pointers to previous pixels with lowest energy values
-        for ($i = $this->width() - 2; $i >= 0; $i--) {
+        for ($i = $width - 2; $i >= 0; $i--) {
             $columns = array_column($pathMatrix, $i);
             $seam[$i] = $columns[$minIdx];
             $minIdx = $seam[$i];
@@ -115,19 +118,25 @@ class SeamCarver implements SeamCarverInterface
         $seam = [];
         $minIdx = 0;
         $minEnergy = 0;
-        $pathMatrix = array_fill(0, $this->height(), array_fill(0, $this->width(), 0));
-        $energyMatrix = $this->getPictureEnergyMatrix();
+        $height = $this->height();
+        $width = $this->width();
+        $pathMatrix = array_fill(0, $this->height(), array_fill(0, $width, 0));
 
-        $line = array_fill(0, $this->width(), 0);
-        for ($i = 0; $i < $this->height(); $i++) {
-            for ($j = 0; $j < $this->width(); $j++) {
+        $energyMatrix = $this->getPictureEnergyMatrix();
+        $line = array_fill(0, $width, 0);
+        for ($i = 0; $i < $height; $i++) {
+            for ($j = 0; $j < $width; $j++) {
                 $p = ($j === 0) ? $j : $j - 1; // x - 1 px
                 $c = $j; // x px
-                $n = ($j + 1 === $this->width()) ? $j : $j + 1; // x + 1 px
+                $n = ($j + 1 === $width) ? $j : $j + 1; // x + 1 px
+
+                $pV = $line[$p];
+                $cV = $line[$c];
+                $nV = $line[$n];
 
                 // add minimum energy to the next px
                 $minEnergy = min($line[$p], $line[$c], $line[$n]);
-                $minIdx = array_search($minEnergy, array_slice($line, $p, $p === $c ? 2 : 3, true), true);
+                $minIdx = array_search($minEnergy, [$p => $pV, $c => $cV, $n => $nV], true);
                 $energyMatrix[$i][$j] += $minEnergy;
 
                 // store x-coordinate position (min energy idx) from which we came to this px to collect seam carve path
@@ -137,12 +146,12 @@ class SeamCarver implements SeamCarverInterface
         }
 
         // identify current seam location by finding minimum value stored in the latest horizontal line of an image
-        $minEnergy = min($energyMatrix[$this->height() - 1]); // energy value
-        $minIdx = array_search($minEnergy, $energyMatrix[$this->height() - 1], true);
+        $minEnergy = min($energyMatrix[$height - 1]); // energy value
+        $minIdx = array_search($minEnergy, $energyMatrix[$height - 1], true);
 
-        $seam[$this->height() - 1] = $minIdx;
+        $seam[$height - 1] = $minIdx;
         // collect lowest seam by using pointers to previous pixels with lowest energy values
-        for ($i = $this->height() - 2; $i >= 0; $i--) {
+        for ($i = $height - 2; $i >= 0; $i--) {
             $seam[$i] = $pathMatrix[$i + 1][$minIdx];
             $minIdx = $seam[$i];
         }
@@ -155,16 +164,19 @@ class SeamCarver implements SeamCarverInterface
      */
     public function removeHorizontalSeam(array $seam): void
     {
+        $height = $this->height();
+        $width = $this->width();
+
         // crop energy matrix
         foreach($seam as $x => $y) {
             $this->energyMatrix[$y][$x] = null;
         }
 
-        for ($y = 0; $y < $this->height(); $y++) {
-            for ($x = 0; $x < $this->width(); $x++) {
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
                 if ($this->energyMatrix[$y][$x] === null) {
                     $i = $y + 1;
-                    if ($i >= $this->height()) {
+                    if ($i >= $height) {
                         break;
                     }
 
@@ -172,13 +184,13 @@ class SeamCarver implements SeamCarverInterface
                         // shift all vertical pixels 1 pixel up
                         $this->energyMatrix[$i - 1][$x] = $this->energyMatrix[$i][$x];
                         $this->energyMatrix[$i][$x] = null;
-                    } while (++$i < $this->height());
+                    } while (++$i < $height);
                 }
             }
         }
 
         // crop image
-        unset($this->energyMatrix[$this->height() - 1]);
+        unset($this->energyMatrix[$height - 1]);
         $this->picture()->removeHorizontalSeam($seam);
     }
 
@@ -190,6 +202,7 @@ class SeamCarver implements SeamCarverInterface
         // crop energy matrix
         for ($y = 0; $y < $this->picture()->getHeight(); $y++) {
             unset($this->energyMatrix[$y][$seam[$y]]);
+
             $this->energyMatrix[$y] = array_values($this->energyMatrix[$y]);
         }
 
@@ -210,7 +223,7 @@ class SeamCarver implements SeamCarverInterface
      *
      * @return array
      */
-    private function getPictureEnergyMatrix(): array
+    public function getPictureEnergyMatrix(): array
     {
         if ($this->energyMatrix === null) {
             $this->energyMatrix = $this->computePictureEnergy();
@@ -220,23 +233,32 @@ class SeamCarver implements SeamCarverInterface
     }
 
     /**
+     * @param array|null $matrix
+     */
+    public function setEnergyMatrix(array $matrix = null): void
+    {
+        $this->energyMatrix = $matrix;
+    }
+
+    /**
      * Skip image matrix through dual-gradient energy function to compute energy for each px.
      *
      * @return array
      */
-    private function computePictureEnergy(): array
+    public function computePictureEnergy(): array
     {
+        $imageMatrix = $this->picture()->getImageMatrix();
         if ($this->energyMatrix === null) {
+            $x = $this->picture()->getWidth();
             $y = $this->picture()->getHeight();
             $energyMatrix = [];
             for ($i = 0; $i < $y; $i++) {
-                $x = $this->picture()->getWidth();
                 $energyY = [];
                 for ($j = 0; $j < $x; $j++) {
-                    $xLeft = $this->picture()->getPxColor($i, $j === 0 ? $x - 1 : $j - 1);
-                    $xRight = $this->picture()->getPxColor($i, $j === $x - 1 ? 0 : $j + 1);
-                    $yLeft = $this->picture()->getPxColor($i === 0 ? $y - 1 : $i - 1, $j);
-                    $yRight = $this->picture()->getPxColor($i === $y - 1 ? 0 : $i + 1, $j);
+                    $xLeft = $imageMatrix[$i][$j === 0 ? $x - 1 : $j - 1];
+                    $xRight = $imageMatrix[$i][$j === $x - 1 ? 0 : $j + 1];
+                    $yLeft = $imageMatrix[$i === 0 ? $y - 1 : $i - 1][$j];
+                    $yRight = $imageMatrix[$i === $y - 1 ? 0 : $i + 1][$j];
 
                     $energyY[$j] = $this->computePxEnergy($xLeft, $xRight, $yLeft, $yRight);
                 }
@@ -282,9 +304,11 @@ class SeamCarver implements SeamCarverInterface
      */
     private function createDualEnergyImage()
     {
+        //$px = imagecreatetruecolor(1, 1);
         $dualGradientImage = imagecreatetruecolor($this->picture()->getWidth(), $this->picture()->getHeight());
         foreach ($this->energyMatrix as $i => $y) {
             foreach ($y as $j => $color) {
+                //$color = imagecolorallocate($px, ($color >> 16) & 0xFF, ($color >> 8) & 0xFF, $color & 0xFF);
                 imagesetpixel($dualGradientImage, $j, $i, $color);
             }
         }

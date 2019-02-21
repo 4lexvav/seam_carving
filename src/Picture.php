@@ -51,6 +51,14 @@ class Picture implements PictureInterface
     /**
      * @inheritdoc
      */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getWidth(): int
     {
         if ($this->width === null) {
@@ -99,9 +107,11 @@ class Picture implements PictureInterface
     {
         if ($this->imageMatrix === null) {
             $img = [];
-            for ($i = 0; $i < $this->getHeight(); $i++) {
+            $height = $this->getHeight();
+            $width = $this->getWidth();
+            for ($i = 0; $i < $height; $i++) {
                 $imgX = [];
-                for ($j = 0; $j < $this->getWidth(); $j++) {
+                for ($j = 0; $j < $width; $j++) {
                     $pxColor = imagecolorat($this->image, $j, $i);
                     $rgb = [];
                     $rgb[0] = ($pxColor >> 16) & 0xFF;
@@ -134,6 +144,14 @@ class Picture implements PictureInterface
     /**
      * @inheritdoc
      */
+    public function setImageMatrix(array $matrix = []): void
+    {
+        $this->imageMatrix = $matrix;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getPxColor(int $y, int $x): array
     {
         return $this->getImageMatrix()[$y][$x];
@@ -144,16 +162,19 @@ class Picture implements PictureInterface
      */
     public function removeHorizontalSeam(array $seam): void
     {
+        $height = $this->getHeight();
+        $width = $this->getWidth();
+
         // crop image matrix
         foreach($seam as $x => $y) {
             $this->imageMatrix[$y][$x] = null;
         }
 
-        for ($y = 0; $y < $this->getHeight(); $y++) {
-            for ($x = 0; $x < $this->getWidth(); $x++) {
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
                 if ($this->imageMatrix[$y][$x] === null) {
                     $i = $y + 1;
-                    if ($i >= $this->getHeight()) {
+                    if ($i >= $height) {
                         break;
                     }
 
@@ -161,14 +182,14 @@ class Picture implements PictureInterface
                         // shift all vertical pixels 1 pixel up
                         $this->imageMatrix[$i - 1][$x] = $this->imageMatrix[$i][$x];
                         $this->imageMatrix[$i][$x] = null;
-                    } while (++$i < $this->getHeight());
+                    } while (++$i < $height);
                 }
             }
         }
 
         // update width
-        unset($this->imageMatrix[$this->getHeight() - 1]);
-        $this->setHeight($this->getHeight() - 1);
+        unset($this->imageMatrix[$height - 1]);
+        $this->setHeight($height - 1);
     }
 
     public function removeVerticalSeam(array $seam): void
@@ -223,10 +244,13 @@ class Picture implements PictureInterface
      */
     private function createImage()
     {
+        $height = $this->getHeight();
+        $width = $this->getWidth();
+
         $px = imagecreatetruecolor(1, 1);
-        $image = imagecreatetruecolor($this->getWidth(), $this->getHeight());
-        for ($y = 0; $y < $this->getHeight(); $y++) {
-            for ($x = 0; $x < $this->getWidth(); $x++) {
+        $image = imagecreatetruecolor($width, $height);
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
                 $color = imagecolorallocate($px, ...$this->imageMatrix[$y][$x]);
                 imagesetpixel($image, $x, $y, $color);
             }

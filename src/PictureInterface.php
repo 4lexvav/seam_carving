@@ -6,6 +6,13 @@ interface PictureInterface
     public function __construct(string $path, array $imageMatrix = null);
 
     /**
+     * Get image resource.
+     *
+     * @return resource
+     */
+    public function getImage();
+
+    /**
      * Get image width.
      *
      * @return int
