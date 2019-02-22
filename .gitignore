@@ -1,4 +1,4 @@
 .idea
 vendor
-!web
-web/1.png
+!web/1.png
+web/*

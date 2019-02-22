@@ -115,7 +115,7 @@ if (isset($_FILES['image']['tmp_name'], $_POST['size'])) {
                 </div>
                 <div class="row mb-5">
                     <img class="img-fluid mx-auto" alt="Responsive image" src="<?= $baseImgWithSeamsFile ?>">
-                    <img class="img-fluid mx-auto" alt="Responsive image" src="<?= $resizedImgFile ?>">
+                    <img style="height:100%" class="img-fluid mx-auto" alt="Responsive image" src="<?= $resizedImgFile ?>">
                 </div>
             </div>
         </div>
