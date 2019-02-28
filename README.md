@@ -1,6 +1,7 @@
 # Seam Carving - content-aware image resizing technique
 
-## Demo https://seam-carve.herokuapp.com/
+### Presentation https://www.slideshare.net/AlexeyVarlamov3/seam-carving-132894353
+### Demo https://seam-carve.herokuapp.com/
 
 ### Usage
 
